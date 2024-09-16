@@ -110,9 +110,12 @@ neon_perf_counters_to_metrics(neon_per_backend_counters *counters)
 			metrics[i].name = psprintf("getpage_wait_seconds_bucket{le=\"%u\"}", threshold / 1000000);
 		}
 		else if (threshold >= 1000)
+		{
+			Assert(threshold % 1000 == 0);
 			metrics[i].name = psprintf("getpage_wait_seconds_bucket{le=\"0.%03u\"}", threshold / 1000);
+		}
 		else
-			metrics[i].name = psprintf("getpage_wait_seconds_bucket{le=\"0.%06u\"}", threshold / 1000000);
+			metrics[i].name = psprintf("getpage_wait_seconds_bucket{le=\"0.%06u\"}", threshold);
 
 		bucket_accum += counters->getpage_wait_us_bucket[bucketno];
 		metrics[i].value = (double) bucket_accum;
